@@ -99,7 +99,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import ProfileForm from './components/profiles/ProfileForm';
 import ProfileView from './components/profiles/ViewProfile';
 import Login from './components/auth/Login'; 
-import AvatarDemo from './components/avatar/AvatarDemo'; 
+import AvatarDemo from './components/consultation/AvatarDemo'; 
 import './App.css';
 
 function App() {
