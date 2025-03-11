@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import StreamingAvatar, { AvatarQuality, StreamingEvents } from "@heygen/streaming-avatar";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+// Import regenerator-runtime at the top of your file
 
 const AvatarDemo = () => {
   const videoRef = useRef(null);
@@ -7,7 +9,28 @@ const AvatarDemo = () => {
   const [avatar, setAvatar] = useState(null);
   const [sessionData, setSessionData] = useState(null);
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   
+  // Speech recognition setup
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  // Update input field with transcript
+  useEffect(() => {
+    if (userInputRef.current && transcript) {
+      userInputRef.current.value = transcript;
+    }
+  }, [transcript]);
+
+  // Update listening state
+  useEffect(() => {
+    setIsListening(listening);
+  }, [listening]);
+
   // 🔹 Fetch HeyGen Token
   const fetchAccessToken = async () => {
     try {
@@ -107,9 +130,28 @@ const AvatarDemo = () => {
       try {
         await avatar.speak({ text: userInputRef.current.value });
         userInputRef.current.value = ""; // Clear input
+        resetTranscript(); // Reset speech recognition transcript
       } catch (error) {
         console.error("❌ Error with avatar speaking:", error);
       }
+    }
+  };
+
+  // 🔹 Toggle Speech Recognition
+  const toggleListening = () => {
+    if (listening) {
+      SpeechRecognition.stopListening();
+    } else {
+      resetTranscript();
+      SpeechRecognition.startListening({ continuous: true });
+    }
+  };
+
+  // 🔹 Handle Voice Input Completion
+  const handleVoiceInputComplete = () => {
+    SpeechRecognition.stopListening();
+    if (transcript) {
+      handleSpeak();
     }
   };
 
@@ -119,6 +161,7 @@ const AvatarDemo = () => {
       if (avatar && sessionData) {
         avatar.stopAvatar().catch(console.error);
       }
+      SpeechRecognition.abortListening();
     };
   }, [avatar, sessionData]);
 
@@ -128,6 +171,11 @@ const AvatarDemo = () => {
       handleSpeak();
     }
   };
+
+  // Display warning if browser doesn't support speech recognition
+  if (!browserSupportsSpeechRecognition) {
+    return <div>Your browser does not support speech recognition. Please try Chrome.</div>;
+  }
 
   return (
     <main className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -144,16 +192,51 @@ const AvatarDemo = () => {
           <button onClick={initializeAvatarSession} disabled={isSessionActive}>Start Session</button>
           <button onClick={terminateAvatarSession} disabled={!isSessionActive}>End Session</button>
         </section>
+        
+        {/* Text Input */}
         <section role="group">
           <input 
             type="text" 
             ref={userInputRef} 
-            placeholder="Type something for the avatar to say..." 
+            placeholder="Type or speak something for the avatar to say..." 
             aria-label="User input" 
             onKeyPress={handleKeyPress}
+            value={transcript || ''}
+            onChange={(e) => {
+              // Allow manual typing even when transcript is being used
+              if (userInputRef.current) {
+                userInputRef.current.value = e.target.value;
+              }
+            }}
           />
           <button onClick={handleSpeak}>Speak</button>
         </section>
+        
+        {/* Voice Input Controls */}
+        <section role="group" style={{ marginTop: "10px" }}>
+          <button 
+            onClick={toggleListening}
+            style={{ 
+              backgroundColor: isListening ? "#ff4c4c" : "#4caf50",
+              color: "white"
+            }}
+          >
+            {isListening ? "Stop Listening" : "Start Voice Input"}
+          </button>
+          
+          {isListening && (
+            <button onClick={handleVoiceInputComplete}>
+              Send Voice Input
+            </button>
+          )}
+        </section>
+        
+        {/* Listening Indicator */}
+        {isListening && (
+          <div style={{ marginTop: "10px", color: "#ff4c4c" }}>
+            🎤 Listening... Speak now
+          </div>
+        )}
       </section>
     </main>
   );
