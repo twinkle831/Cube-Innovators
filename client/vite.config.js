@@ -4,7 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   // plugins: [react()],
-  plugins: [
+  plugins: [ 
+    react(),
     tailwindcss(),
   ],
+  esbuild: {
+    jsxInject: `import 'regenerator-runtime/runtime'`,
+  },
 })
