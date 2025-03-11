@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import StreamingAvatar, { AvatarQuality, StreamingEvents } from "@heygen/streaming-avatar";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-// Import regenerator-runtime at the top of your file
+import './AvatarDemo.css'; // Import CSS file
 
 const AvatarDemo = () => {
   const videoRef = useRef(null);
@@ -174,33 +174,48 @@ const AvatarDemo = () => {
 
   // Display warning if browser doesn't support speech recognition
   if (!browserSupportsSpeechRecognition) {
-    return <div>Your browser does not support speech recognition. Please try Chrome.</div>;
+    return <div className="browser-warning">Your browser does not support speech recognition. Please try Chrome.</div>;
   }
 
   return (
-    <main className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <h1>🎥 Interactive AI Avatar</h1>
+    <main className="avatar-container">
+      <h1 className="app-title">🎥 Interactive AI Avatar</h1>
 
-      {/* Video Display */}
-      <article style={{ width: "fit-content" }}>
-        <video ref={videoRef} autoPlay playsInline />
-      </article>
+      <div className="video-container">
+        <video ref={videoRef} autoPlay playsInline className="avatar-video" />
+        {!isSessionActive && (
+          <div className="video-placeholder">
+            <span>Start session to activate avatar</span>
+          </div>
+        )}
+      </div>
 
-      {/* Controls */}
-      <section>
-        <section role="group">
-          <button onClick={initializeAvatarSession} disabled={isSessionActive}>Start Session</button>
-          <button onClick={terminateAvatarSession} disabled={!isSessionActive}>End Session</button>
-        </section>
+      <div className="controls-container">
+        <div className="button-group">
+          <button 
+            className={`control-button ${isSessionActive ? 'disabled' : 'primary'}`}
+            onClick={initializeAvatarSession} 
+            disabled={isSessionActive}
+          >
+            Start Session
+          </button>
+          <button 
+            className={`control-button ${!isSessionActive ? 'disabled' : 'secondary'}`}
+            onClick={terminateAvatarSession} 
+            disabled={!isSessionActive}
+          >
+            End Session
+          </button>
+        </div>
         
-        {/* Text Input */}
-        <section role="group">
+        <div className="input-group">
           <input 
             type="text" 
             ref={userInputRef} 
             placeholder="Type or speak something for the avatar to say..." 
             aria-label="User input" 
             onKeyPress={handleKeyPress}
+            className="text-input"
             value={transcript || ''}
             onChange={(e) => {
               // Allow manual typing even when transcript is being used
@@ -209,35 +224,40 @@ const AvatarDemo = () => {
               }
             }}
           />
-          <button onClick={handleSpeak}>Speak</button>
-        </section>
-        
-        {/* Voice Input Controls */}
-        <section role="group" style={{ marginTop: "10px" }}>
           <button 
+            className="speak-button"
+            onClick={handleSpeak}
+            disabled={!isSessionActive}
+          >
+            Speak
+          </button>
+        </div>
+        
+        <div className="voice-controls">
+          <button 
+            className={`voice-button ${isListening ? 'listening' : ''}`}
             onClick={toggleListening}
-            style={{ 
-              backgroundColor: isListening ? "#ff4c4c" : "#4caf50",
-              color: "white"
-            }}
+            disabled={!isSessionActive}
           >
             {isListening ? "Stop Listening" : "Start Voice Input"}
           </button>
           
           {isListening && (
-            <button onClick={handleVoiceInputComplete}>
+            <button 
+              className="send-voice-button"
+              onClick={handleVoiceInputComplete}
+            >
               Send Voice Input
             </button>
           )}
-        </section>
+        </div>
         
-        {/* Listening Indicator */}
         {isListening && (
-          <div style={{ marginTop: "10px", color: "#ff4c4c" }}>
+          <div className="listening-indicator">
             🎤 Listening... Speak now
           </div>
         )}
-      </section>
+      </div>
     </main>
   );
 };
