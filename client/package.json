@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heygen/streaming-avatar": "^2.0.10",
+    "livekit-client": "^2.9.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
