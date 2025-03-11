@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
-import StreamingAvatar, { AvatarQuality, StreamingEvents } from "@heygen/streaming-avatar";
+import StreamingAvatar, { AvatarQuality, StreamingEvents, TaskType } from "@heygen/streaming-avatar";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import './AvatarDemo.css'; // Import CSS file
 
-const AvatarDemo = () => {
+const CareerAdvisorAvatar = () => {
   const videoRef = useRef(null);
   const userInputRef = useRef(null);
   const [avatar, setAvatar] = useState(null);
   const [sessionData, setSessionData] = useState(null);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [careerAdvice, setCareerAdvice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   // Speech recognition setup
   const {
@@ -124,11 +126,76 @@ const AvatarDemo = () => {
     }
   };
 
-  // 🔹 Handle Avatar Speaking
+  // 🔹 Fetch Career Advice from Flask Backend
+  const fetchCareerAdvice = async () => {
+    setIsLoading(true);
+    try {
+      // Replace with your actual Flask backend endpoint
+      const response = await fetch("http://localhost:5000/career-advice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          query: userInputRef.current?.value || "Tell me about careers in technology"
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch career advice: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setCareerAdvice(data.advice);
+      
+      // Make the avatar repeat the career advice using REPEAT task type
+      if (avatar && data.advice) {
+        await avatar.speak({ 
+          text: data.advice, 
+          taskType: TaskType.REPEAT 
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error fetching career advice:", error);
+      
+      // Use sample career advice if the backend call fails
+      const sampleAdvice = getSampleCareerAdvice();
+      setCareerAdvice(sampleAdvice);
+      
+      if (avatar) {
+        await avatar.speak({ 
+          text: sampleAdvice, 
+          taskType: TaskType.REPEAT 
+        });
+      }
+    } finally {
+      setIsLoading(false);
+      userInputRef.current.value = ""; // Clear input
+      resetTranscript(); // Reset speech recognition transcript
+    }
+  };
+
+  // 🔹 Sample career advice function
+  const getSampleCareerAdvice = () => {
+    const adviceOptions = [
+      "Based on your interest in technology, I recommend exploring roles in data science. With the growth of AI and machine learning, professionals who can analyze and interpret data are in high demand. Consider taking online courses in Python, statistics, and machine learning to build a foundation in this field.",
+      
+      "Your background in communications could be valuable in a UX/UI design career. Companies are increasingly focused on creating intuitive user experiences, and your ability to understand audience needs would be an asset. I suggest learning design thinking principles and familiarizing yourself with tools like Figma or Adobe XD.",
+      
+      "Have you considered a career in project management? Your organizational skills and attention to detail would be valuable in this role. The Project Management Professional (PMP) certification could help you stand out to employers across many industries."
+    ];
+    
+    return adviceOptions[Math.floor(Math.random() * adviceOptions.length)];
+  };
+
+  // 🔹 Handle Basic Avatar Speaking (for direct user input)
   const handleSpeak = async () => {
     if (avatar && userInputRef.current?.value) {
       try {
-        await avatar.speak({ text: userInputRef.current.value });
+        await avatar.speak({ 
+          text: userInputRef.current.value, 
+          taskType: TaskType.REPEAT 
+        });
         userInputRef.current.value = ""; // Clear input
         resetTranscript(); // Reset speech recognition transcript
       } catch (error) {
@@ -151,7 +218,7 @@ const AvatarDemo = () => {
   const handleVoiceInputComplete = () => {
     SpeechRecognition.stopListening();
     if (transcript) {
-      handleSpeak();
+      fetchCareerAdvice(); // Use the voice input to get career advice
     }
   };
 
@@ -168,7 +235,7 @@ const AvatarDemo = () => {
   // 🔹 Handle Enter Key Press
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      handleSpeak();
+      fetchCareerAdvice(); // Get career advice instead of direct speaking
     }
   };
 
@@ -179,13 +246,13 @@ const AvatarDemo = () => {
 
   return (
     <main className="avatar-container">
-      <h1 className="app-title">🎥 Interactive AI Avatar</h1>
+      <h1 className="app-title">👨‍💼 AI Career Advisor</h1>
 
       <div className="video-container">
         <video ref={videoRef} autoPlay playsInline className="avatar-video" />
         {!isSessionActive && (
           <div className="video-placeholder">
-            <span>Start session to activate avatar</span>
+            <span>Start session to activate your career advisor</span>
           </div>
         )}
       </div>
@@ -197,7 +264,7 @@ const AvatarDemo = () => {
             onClick={initializeAvatarSession} 
             disabled={isSessionActive}
           >
-            Start Session
+            Start Advisor Session
           </button>
           <button 
             className={`control-button ${!isSessionActive ? 'disabled' : 'secondary'}`}
@@ -212,24 +279,18 @@ const AvatarDemo = () => {
           <input 
             type="text" 
             ref={userInputRef} 
-            placeholder="Type or speak something for the avatar to say..." 
-            aria-label="User input" 
+            placeholder="Enter career advice to be spoken by the avatar..." 
+            aria-label="Text for avatar to speak" 
             onKeyPress={handleKeyPress}
             className="text-input"
-            value={transcript || ''}
-            onChange={(e) => {
-              // Allow manual typing even when transcript is being used
-              if (userInputRef.current) {
-                userInputRef.current.value = e.target.value;
-              }
-            }}
+            disabled={isLoading}
           />
           <button 
             className="speak-button"
-            onClick={handleSpeak}
-            disabled={!isSessionActive}
+            onClick={fetchCareerAdvice}
+            disabled={!isSessionActive || isLoading}
           >
-            Speak
+            {isLoading ? "Loading..." : "Make Avatar Speak"}
           </button>
         </div>
         
@@ -237,7 +298,7 @@ const AvatarDemo = () => {
           <button 
             className={`voice-button ${isListening ? 'listening' : ''}`}
             onClick={toggleListening}
-            disabled={!isSessionActive}
+            disabled={!isSessionActive || isLoading}
           >
             {isListening ? "Stop Listening" : "Start Voice Input"}
           </button>
@@ -246,8 +307,9 @@ const AvatarDemo = () => {
             <button 
               className="send-voice-button"
               onClick={handleVoiceInputComplete}
+              disabled={isLoading}
             >
-              Send Voice Input
+              Use Voice Input
             </button>
           )}
         </div>
@@ -257,9 +319,22 @@ const AvatarDemo = () => {
             🎤 Listening... Speak now
           </div>
         )}
+        
+        {isLoading && (
+          <div className="loading-indicator">
+            🔄 Processing...
+          </div>
+        )}
+        
+        {careerAdvice && (
+          <div className="advice-display">
+            <h3>Text Being Spoken:</h3>
+            <p>{careerAdvice}</p>
+          </div>
+        )}
       </div>
     </main>
   );
 };
 
-export default AvatarDemo;
+export default CareerAdvisorAvatar;
