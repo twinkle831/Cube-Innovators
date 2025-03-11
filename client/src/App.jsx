@@ -6,6 +6,7 @@ import ProfileForm from './components/profiles/ProfileForm';
 import ProfileView from './components/profiles/ViewProfile';
 import Login from './components/auth/Login'; 
 import AvatarDemo from './components/consultation/AvatarDemo'; 
+import ResumeBuilder from './components/pages/ResumePage';
 import './App.css';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         {/* Avatar Demo Route */}
         <Route path="/avatar" element={<AvatarDemo />} />
+        <Route path="/resume" element={<ResumeBuilder />} />
 
         {/* Profile Form Route */}
         <Route 
