@@ -20,7 +20,7 @@ const Login = ({ onLogin }) => {
       setError('Please fill in both email and password.');
       return;
     }
-    // Here you would typically call an API to handle the login
+    
     console.log('Login attempt:', { email, password });
     setError(null); // Clear error message
     onLogin(); // Call the onLogin callback
