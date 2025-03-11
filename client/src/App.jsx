@@ -1,3 +1,6 @@
+import React from 'react';
+import AvatarDemo from './components/consultation/AvatarDemo.jsx';
+import './App.css';
 
 // import React, { useState } from 'react';
 // import ProfileForm from './components/profiles/ProfileForm'; // Adjust path if needed
@@ -96,6 +99,10 @@ function App() {
   };
 
   return (
+    <div className="App">
+      <AvatarDemo />
+    </div>
+  );
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       {!isLoggedIn ? (
         <Login onLogin={handleLogin} />
@@ -108,4 +115,5 @@ function App() {
   );
 }
 
+export default App;
 export default App;
