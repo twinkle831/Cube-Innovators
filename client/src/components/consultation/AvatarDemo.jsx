@@ -52,12 +52,11 @@ const CareerAdvisorAvatar = () => {
         const requiredFields = {
           skills: data.skills,
           interests: data.interests,
-          experience: data.experience,
+          experience: data.workExperience,
           education: data.education,
-          current_role: data.current_role,
-          career_goal: data.career_goal,
+    
         };
-
+        console.log("✅ User details fetched:", requiredFields);
         setUserDetails(requiredFields); // Store user details in state
       } catch (error) {
         console.error("❌ Error fetching user details:", error);

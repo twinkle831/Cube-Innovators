@@ -1,10 +1,10 @@
 import React from "react";
-import avatarIImg from "src/assets/images/1.jpg";
-import avatarIIImg from "src/assets/images/2.jpg";
-import avatarIIIImg from "src/assets/images/3.jpg";
-import avatarIVImg from "src/assets/images/4.jpg";
-import avatarVImg from "src/assets/images/5.jpg";
-import pinkBg from "src/assets/images/blue-bg.jpg"
+import avatarIImg from "../../assets/images/1.jpg"
+import avatarIIImg from "../../assets/images/2.jpg";
+import avatarIIIImg from "../../assets/images/3.jpg";
+import avatarIVImg from "../../assets/images/4.jpg";
+import avatarVImg from "../../assets/images/5.jpg";
+import pinkBg from "../../assets/images/blue-bg.jpg"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";

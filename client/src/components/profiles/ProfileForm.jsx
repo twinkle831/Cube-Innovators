@@ -281,7 +281,7 @@ function ProfileForm() {
       if (data.success === false) {
         alert(data.message);
       } else {
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', data.token);
         navigate('/avatar');
       }
     } catch (error) {
