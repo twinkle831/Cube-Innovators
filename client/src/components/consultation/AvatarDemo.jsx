@@ -169,7 +169,7 @@ const CareerAdvisorAvatar = () => {
     setIsLoading(true);
     try {
       // Replace with your actual Flask backend endpoint
-      const response = await fetch("http://localhost:4000/career-advice", {
+      const response = await fetch("http://localhost:5000/career-advice", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
