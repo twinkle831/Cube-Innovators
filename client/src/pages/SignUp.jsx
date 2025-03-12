@@ -42,7 +42,7 @@ export default function SignUp() {
       }
       setLoading(false);
       if (res.ok) {
-        navigate('/sign-in');
+        navigate('/profile-form', { state: { signupData: formData } });
       }
     } catch (error) {
       setErrorMessage(error.message);

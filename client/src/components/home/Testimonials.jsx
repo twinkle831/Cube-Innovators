@@ -1,10 +1,10 @@
 import React from "react";
-import avatarIImg from "src/assets/images/1.jpg";
-import avatarIIImg from "src/assets/images/2.jpg";
-import avatarIIIImg from "src/assets/images/3.jpg";
-import avatarIVImg from "src/assets/images/4.jpg";
-import avatarVImg from "src/assets/images/5.jpg";
-import pinkBg from "src/assets/images/blue-bg.jpg"
+import avatarIImg from "../../assets/images/1.jpg";
+import avatarIIImg from "../../assets/images/2.jpg";
+import avatarIIIImg from "../../assets/images/3.jpg";
+import avatarIVImg from "../../assets/images/4.jpg";
+import avatarVImg from "../../assets/images/5.jpg";
+import pinkBg from "../../assets/images/blue-bg.jpeg"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";
@@ -20,27 +20,27 @@ export default function Testimonials() {
   const testimonials = [
     {
       img: avatarIImg,
-      text: "Sentio has been incredibly helpful in my mental health journey. The personalized responses and empathetic support made me feel understood and heard.",
+      text: "DreamPath has been a guiding light in my career journey. The AI-driven insights and personalized advice helped me gain clarity and confidence in my decisions.",
       author: "— Alexa Johnson",
     },
     {
       img: avatarIIImg,
-      text: "I’ve never experienced anything like Sentio. It's emphatic ability made me feel like I was talking to a real counselor.",
+      text: "I’ve never experienced anything like DreamPath. Its intuitive approach makes career counseling feel natural and deeply personalized, just like talking to a real mentor.",
       author: "— Sarah Williams",
     },
     {
       img: avatarIIIImg,
-      text: "Sentio’s 24/7 availability and tailored advice have been a game-changer for me. Whether through speech or text, I always get the support I need.",
+      text: "DreamPath’s 24/7 accessibility and expert-driven recommendations have been a game-changer. No matter the time, I always get the guidance I need.",
       author: "— Michaela Lee",
     },
     {
       img: avatarIVImg,
-      text: "The virtual therapy sessions with Sentio were a great experience. I felt completely comfortable and received the guidance I needed, anytime, anywhere.",
+      text: "With DreamPath, I feel empowered in my career choices. Its AI-driven coaching gives me the confidence to take my next step with clarity and purpose.",
       author: "— Emily Davis",
     },
     {
       img: avatarVImg,
-      text: "Sentio is a life-saver! It combines advanced AI with genuine empathy, providing support that truly feels personalized and effective.",
+      text: "DreamPath is more than just a tool—it's a career partner. Its smart insights and tailored recommendations have truly transformed the way I plan my future.",
       author: "— David Smith",
     },
   ];

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Testimonials from '../components/home/Testimonials';
-// import Faq from '../components/home/Faq';
+import Faq from '../components/home/Faq';
 // import Pricings from '../components/home/Pricings';
-// import Features from '../components/home/Features';
+import Features from '../components/home/Features';
+import Footer from '../components/home/Footer';
 const Home = () => {
   const [animatedText, setAnimatedText] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -33,25 +34,25 @@ const Home = () => {
   }, []);
   
   const careerImages = [
-    "/api/placeholder/800/450",
-    "/api/placeholder/800/450", 
-    "/api/placeholder/800/450"
+    "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/356040/pexels-photo-356040.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg"
   ];
   
   const careerPaths = ['Technology', 'Healthcare', 'Business'];
   
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-800 text-white">
+    <div >
       <div className="container mx-auto px-4 py-16">
-        <nav className="flex justify-between items-center mb-16">
-          <div className="flex items-center space-x-2">
+        <nav className="flex justify-between items-center mb-16 bg-blue-100">
+          <div className="flex items-center space-x-2 bg-blue-100">
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
               <span className="text-blue-600 text-xl font-bold">DP</span>
             </div>
             <span className="text-xl font-bold">DreamPath</span>
           </div>
           
-          <button className="bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition-colors">
+          <button className="bg-blue-300 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition-colors">
             Get Started
           </button>
         </nav>
@@ -64,14 +65,14 @@ const Home = () => {
             <h2 className="text-2xl md:text-3xl font-light mb-6 h-10">
               {animatedText}<span className="animate-pulse">|</span>
             </h2>
-            <p className="text-lg mb-8 text-blue-100">
+            <p className="text-lg mb-8 text-blue-300">
               Professional guidance to help you navigate career transitions, advance in your field, and achieve your professional goals.
             </p>
             <div className="flex space-x-4">
-              <button className="bg-white text-blue-600 px-8 py-3 rounded-full font-medium hover:bg-blue-100 transition-colors">
+              <button className="bg-blue-200 text-blue-600 px-8 py-3 rounded-full font-medium hover:bg-blue-100 transition-colors">
                 Book Consultation
               </button>
-              <button className="border-2 border-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">
+              <button className="bg-blue-200 border-2 border-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">
                 Learn More
               </button>
             </div>
@@ -90,7 +91,7 @@ const Home = () => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                    <p className="text-xl font-bold">Explore Careers in {careerPaths[currentImageIndex]}</p>
+                    <p className="text-xl font-bold text-white">Explore Careers in {careerPaths[currentImageIndex]}</p>
                   </div>
                 </div>
               ))}
@@ -118,7 +119,17 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Testimonials/>
+      <div className='mb-26 mx-26'>
+        <Features/>
+      </div>
+      <div className='mb-26'>
+        <Faq/>
+      </div>
+      <div className='mb-26'>
+        <Testimonials/>
+      </div>
+     <Footer/>
+
     </div>
   );
 };

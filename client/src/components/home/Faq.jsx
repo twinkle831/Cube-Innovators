@@ -8,28 +8,28 @@ import {
   DislikeOutlined,
 } from "@ant-design/icons";
 import "./FAQSection.css";
-import photo5 from "../assets/images/photo_5.jpg"
-import img2 from "../assets/images/photo_6.jpg"
+import photo5 from "../../assets/images/photo_5.jpg"
 const { Panel } = Collapse;
 
 const faqsData = [
-  { id: 1, question: "What is Sentio?", answer: "Sentio, your AI Virtual Counselor, provides emotional support through AI-driven conversations." },
-  { id: 2, question: "How does the chatbot understand emotions?", answer: "It uses NLP, speech emotion recognition, and sentiment analysis to interpret user emotions." },
-  { id: 3, question: "Does the chatbot use a specific AI model?", answer: "Yes, it leverages a RAG model along with Google's Gemini LLM for responses." },
-  { id: 4, question: "What input methods are supported?", answer: "You can interact via both **voice and text** inputs." },
-  { id: 5, question: "Does the chatbot support voice output?", answer: "Yes, Sentio provides both **text and voice-based** responses." },
-  { id: 6, question: "How does speech emotion recognition work?", answer: "It analyzes tone, pitch, and variations in speech to detect emotions." },
-  { id: 7, question: "Are my conversations stored?", answer: "Yes, chat history is securely stored for personalization. You can delete your chats anytime." },
-  { id: 8, question: "Is my personal data safe?", answer: "Absolutely! We use **end-to-end encryption** and strict privacy policies." },
-  { id: 9, question: "Can the chatbot provide professional counseling?", answer: "It offers emotional support but is **not a replacement for therapy**. It can recommend professionals if needed." },
-  { id: 10, question: "Do I need an account to use Sentio?", answer: "Yes, authentication ensures **personalized experiences** and data security." },
-  { id: 11, question: "Does the chatbot support multiple languages?", answer: "Currently, Sentio primarily interacts in **English**, with multilingual support planned for future updates." },
-  { id: 12, question: "Can I access my chat history?", answer: "Yes! Your history is stored securely, and you can review or delete conversations anytime." },
-  { id: 13, question: "How does the chatbot provide responses?", answer: "It uses **retrieval-based methods (RAG) + generative AI (LLM - Gemini)** for accurate, empathetic replies." },
-  { id: 14, question: "Will Sentio improve over time?", answer: "Yes! The chatbot **learns from interactions** while maintaining ethical AI principles and privacy." },
-  { id: 15, question: "Can I integrate the chatbot with other platforms?", answer: "Integrations are in progress, but currently, Sentio is a standalone application." },
-  { id: 16, question: "Does the chatbot detect mental health risks?", answer: "It can identify distress patterns but **is not a diagnostic tool**. If needed, it recommends professional help." },
-];
+  { id: 1, question: "What is DreamPath?", answer: "DreamPath is your AI-powered career counselor, offering guidance on career choices, skill-building, and professional growth." },
+  { id: 2, question: "How does DreamPath provide career advice?", answer: "It uses AI-driven insights, industry trends, and skill assessments to offer personalized career recommendations." },
+  { id: 3, question: "What AI technology does DreamPath use?", answer: "DreamPath leverages a **RAG model** alongside Google's **Gemini LLM** to generate accurate and insightful career advice." },
+  { id: 4, question: "What input methods are supported?", answer: "You can interact with DreamPath through **both voice and text** for a seamless experience." },
+  { id: 5, question: "Does DreamPath support voice responses?", answer: "Yes, DreamPath provides both **text-based and voice-driven** career guidance." },
+  { id: 6, question: "Can DreamPath analyze my resume?", answer: "Yes! DreamPath offers **resume analysis** and optimization tips to improve your job prospects." },
+  { id: 7, question: "Is my career data stored?", answer: "Yes, your career history and preferences are securely stored to offer personalized advice. You can delete your data anytime." },
+  { id: 8, question: "How secure is my personal information?", answer: "We prioritize your privacy with **end-to-end encryption** and strict data protection policies." },
+  { id: 9, question: "Can DreamPath replace human career counseling?", answer: "DreamPath provides AI-driven insights but **is not a substitute for professional career coaches**. It can connect you to experts if needed." },
+  { id: 10, question: "Do I need an account to use DreamPath?", answer: "Yes, signing in ensures **personalized career recommendations** and data security." },
+  { id: 11, question: "Does DreamPath support multiple languages?", answer: "Currently, DreamPath operates in **English**, with plans to introduce multilingual support soon." },
+  { id: 12, question: "Can I track my career progress?", answer: "Yes! DreamPath keeps a record of your career assessments, skill recommendations, and consultations, which you can review anytime." },
+  { id: 13, question: "How does DreamPath generate responses?", answer: "It combines **retrieval-based AI (RAG) and generative AI (LLM - Gemini)** to provide insightful career guidance." },
+  { id: 14, question: "Will DreamPath improve over time?", answer: "Yes! DreamPath continuously learns from industry trends and user interactions to enhance its career guidance capabilities." },
+  { id: 15, question: "Can DreamPath integrate with job platforms?", answer: "Integrations with job portals and professional networks are in progress, but currently, DreamPath operates as a standalone career assistant." },
+  { id: 16, question: "Can DreamPath identify career stress or burnout?", answer: "It can recognize patterns of **career dissatisfaction and burnout** but **is not a diagnostic tool**. If needed, it can suggest career coaching or mental wellness resources." },
+]; 
+
 
 const Faq = () => {
   const [faqs, setFaqs] = useState(faqsData);

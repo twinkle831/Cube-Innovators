@@ -1,16 +1,16 @@
-import { benefits } from "../constants";
+import { benefits } from "../../constants";
 import Heading from "./Heading";
 import Section from "./Section";
-import Arrow from "../assets/svg/Arrow";
+import Arrow from "../../assets/svg/Arrow";
 import { GradientLight } from "./design/Benefits";
-import ClipPath from "../assets/svg/ClipPath";
+import ClipPath from "../../assets/svg/ClipPath";
 const Features = () => {
     return (
       <Section id="features">
         <div className="container relative z-2">
           <div className="text-center">
             <p className="text-xl md:text-2xl lg:text-3xl font-bold" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
-              <span className="text-[#f64a8a]">SPEAK, TYPE, HEAL. </span> 
+              <span className="text-[#f64a8a]">EXPERT CAREER GUIDANCE </span> 
               <span className="text-[#5CE0E6]">ANYTIME, ANYWHERE. </span>
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
@@ -18,7 +18,7 @@ const Features = () => {
             </h1>
           </div>
   
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10 mb-10 justify-items-center mt-3">
+          <div className="grid grid-cols-3 lg:grid-cols-3 gap-10 mb-10 justify-items-center mt-3">
             {benefits.map((item) => (
               <div
                 className="block relative p-0.5 bg-no-repeat bg-[length:100%_100%] max-w-[20rem] max-h-[19rem] mx-auto"
