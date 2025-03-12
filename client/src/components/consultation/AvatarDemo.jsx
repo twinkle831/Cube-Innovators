@@ -12,7 +12,7 @@ const CareerAdvisorAvatar = () => {
   const [isListening, setIsListening] = useState(false);
   const [careerAdvice, setCareerAdvice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [userDetails, setUserDetails] = useState({});
   // Speech recognition setup
   const {
     transcript,
@@ -27,6 +27,44 @@ const CareerAdvisorAvatar = () => {
       userInputRef.current.value = transcript;
     }
   }, [transcript]);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found in local storage');
+        }
+        const response = await fetch("http://localhost:5000/api/user/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user details: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Extract only the required fields
+        const requiredFields = {
+          skills: data.skills,
+          interests: data.interests,
+          experience: data.workExperience,
+          education: data.education,
+    
+        };
+        console.log("✅ User details fetched:", requiredFields);
+        setUserDetails(requiredFields); // Store user details in state
+      } catch (error) {
+        console.error("❌ Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails(); // Call the function to fetch user details
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // Update listening state
   useEffect(() => {
@@ -131,13 +169,14 @@ const CareerAdvisorAvatar = () => {
     setIsLoading(true);
     try {
       // Replace with your actual Flask backend endpoint
-      const response = await fetch("http://localhost:5000/career-advice", {
+      const response = await fetch("http://localhost:4000/career-advice", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ 
-          query: userInputRef.current?.value || "Tell me about careers in technology"
+          query: userInputRef.current?.value || "Tell me about careers in technology",
+          userDetails: userDetails
         }),
       });
 

@@ -37,11 +37,12 @@ function App() {
       <Route path='/about' element={<About />} />
       <Route path='/sign-in' element={<SignIn />} />
       <Route path='/sign-up' element={<SignUp />} />
-      {/* <Route element={<PrivateRoute/>}> */}
+      <Route path='/profile-form' element={<ProfileForm />} />
+      <Route element={<PrivateRoute/>}>
     <Route path='/resume' element={<ResumeBuilder />} />
     <Route path='/avatar' element={<AvatarDemo />} />
         <Route path='/dashboard' element={<Dashboard />} />
-      {/* </Route> */}
+      </Route>
     </Routes>
   </BrowserRouter>
   );

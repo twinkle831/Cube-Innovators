@@ -35,7 +35,7 @@ export default function SignIn() {
     }
     try {
       dispatch(signInStart());
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -46,8 +46,9 @@ export default function SignIn() {
       }
 
       if (res.ok) {
+        localStorage.setItem('token', data.token);
         dispatch(signInSuccess(data));
-        navigate('/');
+        navigate('/3d-avatar');
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
