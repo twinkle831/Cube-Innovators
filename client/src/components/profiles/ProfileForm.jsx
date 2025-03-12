@@ -181,9 +181,9 @@
 // }
 
 // export default ProfileForm;
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Grid, TextField, Button, Typography, Box, Paper } from '@mui/material';
+import { Grid, TextField, Button, Typography, Box, Paper, CircularProgress } from '@mui/material';
 
 function ProfileForm() {
   const location = useLocation();
@@ -195,7 +195,7 @@ function ProfileForm() {
     skills: [],
     interests: [],
     workExperience: [],
-    education: []
+    education: [],
   });
 
   const [newSkill, setNewSkill] = useState('');
@@ -204,13 +204,23 @@ function ProfileForm() {
     title: '',
     company: '',
     duration: '',
-    description: ''
+    description: '',
   });
   const [newEducation, setNewEducation] = useState({
     degree: '',
     institution: '',
-    year: ''
+    year: '',
   });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Redirect if signupData is missing
+  useEffect(() => {
+    if (!signupData) {
+      navigate('/sign-up');
+    }
+  }, [signupData, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -248,7 +258,7 @@ function ProfileForm() {
         title: '',
         company: '',
         duration: '',
-        description: ''
+        description: '',
       });
     }
   };
@@ -259,16 +269,25 @@ function ProfileForm() {
       setNewEducation({
         degree: '',
         institution: '',
-        year: ''
+        year: '',
       });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage('');
+
+    if (!profileData.name || profileData.skills.length === 0 || profileData.interests.length === 0) {
+      setErrorMessage('Please fill out all required fields.');
+      setLoading(false);
+      return;
+    }
+
     const combinedData = {
       ...signupData,
-      ...profileData
+      ...profileData,
     };
 
     try {
@@ -277,17 +296,47 @@ function ProfileForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(combinedData),
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
       const data = await res.json();
       if (data.success === false) {
-        alert(data.message);
+        setErrorMessage(data.message);
       } else {
-        localStorage.setItem('token', data.token);
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
         navigate('/avatar');
       }
     } catch (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Reusable AddItem component
+  const AddItem = ({ label, value, onChange, onAdd, buttonText }) => (
+    <Grid container spacing={1}>
+      <Grid item xs={12} sm={8}>
+        <TextField
+          fullWidth
+          label={label}
+          value={value}
+          onChange={onChange}
+          size="small"
+          sx={{ background: '#f0f4ff', borderRadius: 1 }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Button variant="contained" onClick={onAdd} sx={{ background: '#ff4081', '&:hover': { background: '#e91e63' } }}>
+          {buttonText}
+        </Button>
+      </Grid>
+    </Grid>
+  );
 
   return (
     <Box sx={{ padding: 3, background: 'linear-gradient(135deg, #f5f7fa, #c3cfe2)', minHeight: '100vh' }}>
@@ -305,6 +354,7 @@ function ProfileForm() {
                 value={profileData.name}
                 onChange={handleInputChange}
                 sx={{ background: '#f0f4ff', borderRadius: 1 }}
+                required
               />
             </Grid>
 
@@ -320,21 +370,13 @@ function ProfileForm() {
                     </Box>
                   </Grid>
                 ))}
-                <Grid item xs={12} sm={8}>
-                  <TextField
-                    fullWidth
-                    label="Add new skill"
-                    value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
-                    size="small"
-                    sx={{ background: '#f0f4ff', borderRadius: 1 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Button variant="contained" onClick={addSkill} sx={{ background: '#ff4081', '&:hover': { background: '#e91e63' } }}>
-                    Add Skill
-                  </Button>
-                </Grid>
+                <AddItem
+                  label="Add new skill"
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                  onAdd={addSkill}
+                  buttonText="Add Skill"
+                />
               </Grid>
             </Grid>
 
@@ -350,21 +392,13 @@ function ProfileForm() {
                     </Box>
                   </Grid>
                 ))}
-                <Grid item xs={12} sm={8}>
-                  <TextField
-                    fullWidth
-                    label="Add new interest"
-                    value={newInterest}
-                    onChange={(e) => setNewInterest(e.target.value)}
-                    size="small"
-                    sx={{ background: '#f0f4ff', borderRadius: 1 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Button variant="contained" onClick={addInterest} sx={{ background: '#4caf50', '&:hover': { background: '#388e3c' } }}>
-                    Add Interest
-                  </Button>
-                </Grid>
+                <AddItem
+                  label="Add new interest"
+                  value={newInterest}
+                  onChange={(e) => setNewInterest(e.target.value)}
+                  onAdd={addInterest}
+                  buttonText="Add Interest"
+                />
               </Grid>
             </Grid>
 
@@ -488,9 +522,21 @@ function ProfileForm() {
               </Grid>
             </Grid>
 
+            {errorMessage && (
+              <Grid item xs={12}>
+                <Alert severity="error">{errorMessage}</Alert>
+              </Grid>
+            )}
+
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" fullWidth sx={{ background: 'linear-gradient(135deg, #3f51b5, #9c27b0)', color: 'white', fontWeight: 'bold', '&:hover': { background: 'linear-gradient(135deg, #303f9f, #7b1fa2)' } }}>
-                Submit
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={loading}
+                sx={{ background: 'linear-gradient(135deg, #3f51b5, #9c27b0)', color: 'white', fontWeight: 'bold', '&:hover': { background: 'linear-gradient(135deg, #303f9f, #7b1fa2)' } }}
+              >
+                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Submit'}
               </Button>
             </Grid>
           </Grid>
