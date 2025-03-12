@@ -182,9 +182,14 @@
 
 // export default ProfileForm;
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Grid, TextField, Button, Typography, Box, Paper } from '@mui/material';
 
-function ProfileForm({ onSubmit }) {
+function ProfileForm() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { signupData } = location.state || {};
+
   const [profileData, setProfileData] = useState({
     name: '',
     skills: [],
@@ -259,9 +264,29 @@ function ProfileForm({ onSubmit }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(profileData);
+    const combinedData = {
+      ...signupData,
+      ...profileData
+    };
+
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(combinedData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        alert(data.message);
+      } else {
+        localStorage.setItem('token', token);
+        navigate('/avatar');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
