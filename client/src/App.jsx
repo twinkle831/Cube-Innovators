@@ -13,6 +13,8 @@ import Dashboard from './pages/Dashboard';
 import SignUp from './pages/SignUp';
 import PrivateRoute from './components/extras/PrivateRoute.jsx';
 import ResumeBuilder from './components/pages/ResumePage.jsx';
+import CareerAssessment from './components/assessment/CareerAssessment.jsx';
+
 
 
 function App() {
@@ -33,14 +35,18 @@ function App() {
     <Header />
     <Routes>
     <Route path='/home' element={<Home />} />
+    <Route path='/' element={<Home />} />
       <Route path='/about' element={<About />} />
       <Route path='/sign-in' element={<SignIn />} />
       <Route path='/sign-up' element={<SignUp />} />
-      {/* <Route element={<PrivateRoute/>}> */}
-    <Route path='/resume' element={<ResumeBuilder />} />
+      <Route path='/profile-form' element={<ProfileForm />} />
+      <Route path='/career-assessment' element={<CareerAssessment />} />
+      <Route element={<PrivateRoute/>}>
+    <Route path='/resume-builder' element={<ResumeBuilder />} />
     <Route path='/avatar' element={<AvatarDemo />} />
         <Route path='/dashboard' element={<Dashboard />} />
-      {/* </Route> */}
+        <Route path='/community-forum' element={<CommunityForum />} />
+      </Route>
     </Routes>
   </BrowserRouter>
   );

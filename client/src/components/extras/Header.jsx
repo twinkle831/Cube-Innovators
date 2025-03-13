@@ -186,7 +186,7 @@ export default function Header() {
 
         {/* Navigation Links */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
-          {['Home', 'About', 'Sign-Up'].map((item, index) => (
+          {['Home', 'About', 'Sign-Up', 'Resume-Builder', 'Profile-Form', 'Career-Assessment'].map((item, index) => (
             <Button key={index} component={Link} to={`/${item.toLowerCase()}`}
               sx={{
                 color: 'white',

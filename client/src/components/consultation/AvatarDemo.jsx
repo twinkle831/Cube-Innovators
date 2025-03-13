@@ -12,7 +12,7 @@ const CareerAdvisorAvatar = () => {
   const [isListening, setIsListening] = useState(false);
   const [careerAdvice, setCareerAdvice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [userDetails, setUserDetails] = useState({});
   // Speech recognition setup
   const {
     transcript,
@@ -27,6 +27,71 @@ const CareerAdvisorAvatar = () => {
       userInputRef.current.value = transcript;
     }
   }, [transcript]);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        // Debug token existence and format
+        console.log("Authentication debugging:");
+        console.log("- Token exists:", !!token);
+        console.log("- Token value:", token ? `${token.substring(0, 15)}...` : "none");
+        console.log("- Token length:", token ? token.length : 0);
+        
+        if (!token) {
+          throw new Error('No token found in local storage');
+        }
+        
+        // Log the request details before making it
+        console.log("Making API request to:", "http://localhost:4000/api/user/profile");
+        console.log("With headers:", {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        });
+        
+        const response = await fetch("http://localhost:4000/api/user/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        
+        // Log response status and headers
+        console.log("Response status:", response.status);
+        console.log("Response status text:", response.statusText);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user details: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        
+        // Log successful data retrieval
+        console.log("Response data received:", !!data);
+        console.log("Data structure:", Object.keys(data));
+    
+        // Extract only the required fields
+        const requiredFields = {
+          skills: data.skills,
+          interests: data.interests,
+          experience: data.workExperience,
+          education: data.education,
+        };
+        console.log("✅ User details fetched:", requiredFields);
+        setUserDetails(requiredFields); // Store user details in state
+      } catch (error) {
+        console.error("❌ Error fetching user details:", error);
+        console.error("Error name:", error.name);
+        console.error("Error message:", error.message);
+        
+        // You may want to add fallback user details here
+        // setUserDetails({ skills: [], interests: [], experience: [], education: [] });
+      }
+    };
+
+    fetchUserDetails(); // Call the function to fetch user details
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // Update listening state
   useEffect(() => {
@@ -137,7 +202,8 @@ const CareerAdvisorAvatar = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ 
-          query: userInputRef.current?.value || "Tell me about careers in technology"
+          query: userInputRef.current?.value || "Tell me about careers in technology",
+          userDetails: userDetails
         }),
       });
 
@@ -146,12 +212,12 @@ const CareerAdvisorAvatar = () => {
       }
 
       const data = await response.json();
-      setCareerAdvice(data.advice);
+      setCareerAdvice(data.detailed_advice);
       
       // Make the avatar repeat the career advice using REPEAT task type
-      if (avatar && data.advice) {
+      if (avatar && data.detailed_advice) {
         await avatar.speak({ 
-          text: data.advice, 
+          text: data.detailed_advice, 
           taskType: TaskType.REPEAT 
         });
       }
